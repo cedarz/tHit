@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.20)
 
 file(GLOB_RECURSE source_list src/*.h src/*.cpp)
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${source_list})
+add_compile_options(/utf-8)
+
 add_executable(model-viewer ${source_list})
 target_include_directories(model-viewer PRIVATE src
     ${CMAKE_SOURCE_DIR}/externals/glm
@@ -11,7 +13,6 @@ target_include_directories(model-viewer PRIVATE src
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 target_link_libraries(model-viewer PRIVATE 
-    spdlog 
     glfw 
     imgui
     imgui_glfw_opengl3
