@@ -17,10 +17,7 @@
 #endif
 #include "stb_image_write.h"
 
-#if __EMSCRIPTEN__
-#include <emscripten/emscripten.h>
-#include <emscripten/html5.h>
-#endif
+#include <spdlog/spdlog.h>
 
 //namespace pmp {
 
@@ -93,13 +90,13 @@ Window::Window(const char* title, int width, int height, bool showgui)
 
 
     // debug: print GL and GLSL version
-    std::cout << " Vendor: " << glGetString(GL_VENDOR) << std::endl;
-    std::cout << " Render: " << glGetString(GL_RENDERER) << std::endl;
-    std::cout << "     GL: " << glGetString(GL_VERSION) << std::endl;
-    std::cout << "   GLSL: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+    spdlog::info("Vendor: {}", (const char*)glGetString(GL_VENDOR));
+    spdlog::info("Render: {}", (const char*)glGetString(GL_RENDERER));
+    spdlog::info("GL: {}", (const char*)glGetString(GL_VERSION));
+    spdlog::info("GLSL: {}", (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION));
     GLint profile;
     glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &profile);
-    std::cout << "Profile: " << (profile & GL_CONTEXT_CORE_PROFILE_BIT ? "Core" : "Compatibility") << std::endl;
+    spdlog::info("OpenGL Profile: {}", profile & GL_CONTEXT_CORE_PROFILE_BIT ? "Core" : "Compatibility");
 
 
     int num_ext;
@@ -110,10 +107,10 @@ Window::Window(const char* title, int width, int height, bool showgui)
     {
         if (!strcmp((const char*)glGetStringi(GL_EXTENSIONS, i), "GL_ARB_compatibility"))
         {
-            printf("Compatiblity Profile\n");
+            spdlog::info("Compatiblity Profile");
         }
         else if (!strcmp((const char*)glGetStringi(GL_EXTENSIONS, i), "GL_ARB_bindless_texture")) {
-            printf("Bindless texture supported\n");
+            spdlog::info("Bindless texture supported");
         }
     }
 

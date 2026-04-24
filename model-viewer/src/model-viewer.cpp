@@ -23,7 +23,7 @@
 #include "gl460/ShaderProgram.h";
 #include "gfx/pipeline.h"
 
-#include "renderpass/ShadowDepthPass.h"
+#include "renderpass/ShadowPass.h"
 #include "scene/loader.h"
 #include "scene/scene.h"
 
@@ -61,7 +61,7 @@ class ModelViewer : public TrackballViewer
         glCreateVertexArrays(1, &vao);
         MAX_LIST_NODE = width * height;
 
-        shadow_depth_pass = ShadowDepthPass::create("shadow_depth", &shadow_camera);
+        shadow_pass = ShadowPass::create("shadow_depth", &shadow_camera);
     }
 
     Model debugmesh;
@@ -76,7 +76,7 @@ class ModelViewer : public TrackballViewer
     ShaderProgram debug_shader;
     ShaderProgram pbr_shader;
 
-    std::shared_ptr<RenderPass> shadow_depth_pass;
+    std::shared_ptr<RenderPass> shadow_pass;
 
     Camera camera;
     Camera shadow_camera;
@@ -119,7 +119,7 @@ public:
 
         model = T2 * rot * T1;
 
-        shadow_depth_pass->SetMeshes({ &mesh, &hairmesh }, model);
+        shadow_pass->SetMeshes({ &mesh, &hairmesh }, model);
     }
 
     void CreateHairBuffers()

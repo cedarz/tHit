@@ -1,28 +1,28 @@
-#include "ShadowDepthPass.h"
+#include "ShadowPass.h"
 #include <glad/gl.h>
 #include <spdlog/spdlog.h>
 
 
-ShadowDepthPass::SharedPtr ShadowDepthPass::create(const std::string& pass_name, Camera* camera)
+ShadowPass::SharedPtr ShadowPass::create(const std::string& pass_name, Camera* camera)
 {
-    SharedPtr pShadowDepth = SharedPtr(new ShadowDepthPass(pass_name));
+    SharedPtr pShadowDepth = SharedPtr(new ShadowPass(pass_name));
     pShadowDepth->shadow_camera = camera;
     return pShadowDepth;
 }
 
-ShadowDepthPass::ShadowDepthPass(const std::string& pass_name) : RenderPass(pass_name)
+ShadowPass::ShadowPass(const std::string& pass_name) : RenderPass(pass_name)
 {
-    depth_tex = gl::Texture::create2D(m_width, m_height, ResourceFormat::D24Unorm);
-    depth_fbo = std::make_shared<gl::Framebuffer>();
-    depth_fbo->SetAttatchments({}, depth_tex);
+    shadow_depth_tex = gl::Texture::create2D(m_width, m_height, ResourceFormat::D24Unorm);
+    shadow_depth_fbo = std::make_shared<gl::Framebuffer>();
+    shadow_depth_fbo->SetAttatchments({}, shadow_depth_tex);
     shadow_depth_shader.load({ {Shader::Type::Vertex, AssetManager::GetAssetPath("shaders/shadow_depth.vert")} });
 }
 
-void ShadowDepthPass::Execute()
+void ShadowPass::Execute()
 {
     GLint vp[4]; glGetIntegerv(GL_VIEWPORT, vp);
     spdlog::info("viewport : {} {} {} {} ", vp[0], vp[1], vp[2], vp[3]);
-    depth_fbo->use();
+    shadow_depth_fbo->use();
     glClearDepth(1.0);
     glClear(GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
@@ -46,10 +46,10 @@ void ShadowDepthPass::Execute()
     //mesh.Draw(shadow_depth_shader);
     //hairmesh.Draw(shadow_depth_shader);
 
-    depth_fbo->unuse();
+    shadow_depth_fbo->unuse();
 }
 
-void ShadowDepthPass::SetMeshes(std::vector<Mesh*> meshes, const glm::mat4& worldMatrix)
+void ShadowPass::SetMeshes(std::vector<Mesh*> meshes, const glm::mat4& worldMatrix)
 {
     m_meshes = meshes;
     m_model = worldMatrix;
