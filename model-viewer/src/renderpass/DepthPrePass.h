@@ -35,8 +35,8 @@ private:
     std::shared_ptr<gl::Framebuffer> depth_fbo;
     std::shared_ptr <gl::Texture> depth_tex;
     Camera* camera;
-    int m_width = 1280;// 1024;
-    int m_height = 720;// 1024;
+    int m_width = 1280;
+    int m_height = 720;
 };
 
 #endif // !Depth_Pre_Pass_H
